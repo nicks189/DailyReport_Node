@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "mocha --recursive"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
@@ -13,6 +14,12 @@
     "jade": "~1.11.0",
     "mongoose": "^5.4.2",
     "morgan": "~1.9.0",
-    "serve-favicon": "~2.4.5"
+    "serve-favicon": "~2.4.5",
+    "twilio": "^3.26.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^5.2.0"
   }
 }

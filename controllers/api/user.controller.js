@@ -21,9 +21,7 @@ module.exports.add = (req, res, next) => {
 module.exports.fetch = (req, res, next) => {
     console.log(req.params.email);
     User.findByEmail(req.params.email)
-        .then((user) => {
-            res.json({ user: user.toAuthResponse() });
-        })
+        .then((user) => res.json({ user: user.toAuthResponse() }))
         .catch(next);
 };
 
@@ -41,4 +39,16 @@ module.exports.update = (req, res, next) => {
                 .catch(next);
         })
         .catch(next);
+};
+
+/**
+ * Delete user
+ * @param req
+ * @param res
+ * @param next
+ */
+module.exports.delete = (req, res, next) => {
+    User.deleteByEmail(req.params.email)
+        .then(() => res.json({ message: 'User with email ' + req.params.email + ' deleted.' }))
+        .catch(next)
 };

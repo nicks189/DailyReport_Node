@@ -44,6 +44,18 @@ UserSchema.statics.findByEmail = function(email) {
     })
 };
 
+UserSchema.statics.deleteByEmail = function(email) {
+    return new Promise((resolve, reject) => {
+        User.findOneAndRemove({ email: email })
+            .then((user) => {
+                if (!user) {
+                    reject(new Error("No user found with email" + email));
+                }
+                resolve();
+            })
+    })
+};
+
 UserSchema.methods.toAuthResponse = function() {
     return {
         token: this._id,
@@ -56,6 +68,7 @@ UserSchema.methods.toAuthResponse = function() {
 
 UserSchema.methods.updateFromObj = function(obj) {
     let user = this;
+    // Only update fields that are actually present in obj, this is the correct way to check
     if (typeof obj.name !== 'undefined') {
         user.name = obj.name;
     }

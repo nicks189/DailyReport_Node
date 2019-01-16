@@ -18,13 +18,7 @@ class TwilioUtil {
             to: user.smsNumber,
             from: appNumber
         });
-        SMSMessage.saveFromObj(sentMessage)
-            .then(function(thing) {console.log('reached')})
-            .catch(function(err) {console.log('reached err')});
-        // let msg = await SMSMessage.saveFromObj(sentMessage);
-        // console.log('Saved message: ');
-        // console.log(msg);
-        return "";
+        return SMSMessage.saveFromObj(sentMessage);
     }
 
     getMessage(sid) {

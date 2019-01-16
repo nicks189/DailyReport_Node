@@ -51,8 +51,6 @@ SMSMessageSchema.statics.saveFromObj = function(obj) {
     smsMessage.dateUpdated = obj.dateUpdated;
     smsMessage.errorCode = obj.errorCode;
     smsMessage.errorMessage = obj.errorMessage;
-    console.log('smsMessage: ');
-    console.log(smsMessage);
     return smsMessage.save();
 };
 

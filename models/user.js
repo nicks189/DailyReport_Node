@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-mongoose.set('useCreateIndex', true)
-
 let UserSchema = mongoose.Schema({
     name: {
         type: String,
@@ -10,8 +8,10 @@ let UserSchema = mongoose.Schema({
     email: {
         type: String,
         trim: true,
-        unique: true
+        unique: true,
+        required: true
     },
+    // todo: make unique?
     smsNumber: {
         type: String,
         trim: true
@@ -22,7 +22,41 @@ let UserSchema = mongoose.Schema({
     }
 });
 
-UserSchema.methods.toResponseJSON = function() {
+UserSchema.statics.saveFromObj = function(obj) {
+    let user = new this();
+    user.name = obj.name;
+    user.email = obj.email;
+    user.smsNumber = obj.smsNumber;
+    user.twitterHandle = obj.twitterHandle;
+    console.log(user);
+    return user.save();
+};
+
+UserSchema.statics.findByEmail = function(email) {
+    return new Promise((resolve, reject) => {
+        User.findOne({ email: email })
+            .then((user) => {
+                if (!user) {
+                    reject(new Error("No user found with email " + email));
+                }
+                resolve(user);
+            })
+    })
+};
+
+UserSchema.statics.deleteByEmail = function(email) {
+    return new Promise((resolve, reject) => {
+        User.findOneAndRemove({ email: email })
+            .then((user) => {
+                if (!user) {
+                    reject(new Error("No user found with email" + email));
+                }
+                resolve();
+            })
+    })
+};
+
+UserSchema.methods.toAuthResponse = function() {
     return {
         token: this._id,
         name: this.name,
@@ -32,5 +66,23 @@ UserSchema.methods.toResponseJSON = function() {
     }
 };
 
-let User = mongoose.model('user', UserSchema);
+UserSchema.methods.updateFromObj = function(obj) {
+    let user = this;
+    // Only update fields that are actually present in obj, this is the correct way to check
+    if (typeof obj.name !== 'undefined') {
+        user.name = obj.name;
+    }
+    if (typeof obj.email !== 'undefined') {
+        user.email = obj.email;
+    }
+    if (typeof obj.smsNumber !== 'undefined') {
+        user.smsNumber = obj.smsNumber;
+    }
+    if (typeof obj.twitterHandle !== 'undefined') {
+        user.twitterHandle = obj.twitterHandle;
+    }
+    return user.save();
+};
+
+const User = mongoose.model('user', UserSchema);
 module.exports = User;
